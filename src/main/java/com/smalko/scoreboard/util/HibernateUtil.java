@@ -1,7 +1,7 @@
-package com.smalko.scoreboard.scoreboard.util;
+package com.smalko.scoreboard.util;
 
-import com.smalko.scoreboard.scoreboard.entity.Matches;
-import com.smalko.scoreboard.scoreboard.entity.Players;
+import com.smalko.scoreboard.entity.Matches;
+import com.smalko.scoreboard.entity.Players;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

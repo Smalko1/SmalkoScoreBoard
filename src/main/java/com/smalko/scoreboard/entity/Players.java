@@ -1,4 +1,4 @@
-package com.smalko.scoreboard.scoreboard.entity;
+package com.smalko.scoreboard.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
