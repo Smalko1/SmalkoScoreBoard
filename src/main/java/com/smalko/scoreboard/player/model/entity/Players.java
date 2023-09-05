@@ -1,21 +1,17 @@
-package com.smalko.scoreboard.entity;
+package com.smalko.scoreboard.player.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class Players {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 }

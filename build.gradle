@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group 'com.smalko.scoreboard'
@@ -14,6 +15,7 @@ ext {
     junitVersion = '5.10.0'
 }
 
+
 java{
     sourceCompatibility = JavaVersion.VERSION_19
     targetCompatibility = JavaVersion.VERSION_19
@@ -23,12 +25,20 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+configurations {
+    querydsl.extendsFrom implementation, compileOnly, runtimeOnly
+}
+
 dependencies {
     compileOnly('jakarta.servlet:jakarta.servlet-api:6.0.0')
     implementation('org.hibernate:hibernate-core:6.1.5.Final')
     implementation('org.glassfish.jaxb:jaxb-runtime:4.0.1')
-    testImplementation 'com.h2database:h2:2.2.220'
-    implementation("org.postgresql:postgresql:42.6.0")
+    implementation ('com.h2database:h2:2.2.220')
+    //implementation("org.postgresql:postgresql:42.6.0")
+
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
+
 
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
@@ -39,6 +49,18 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
+
+querydsl{
+    jpa = true;
+    querydslSourcesDir = "$buildDir/genetated/sources/annotationProcessor/java/main"
+}
+
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.dependsOn(clean)
 
 test {
     useJUnitPlatform()

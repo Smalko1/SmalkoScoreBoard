@@ -1,5 +1,5 @@
-import com.smalko.scoreboard.entity.Matches;
-import com.smalko.scoreboard.entity.Players;
+import com.smalko.scoreboard.match.model.entity.Matches;
+import com.smalko.scoreboard.player.model.entity.Players;
 import com.smalko.scoreboard.util.HibernateUtil;
 import org.junit.jupiter.api.Test;
 

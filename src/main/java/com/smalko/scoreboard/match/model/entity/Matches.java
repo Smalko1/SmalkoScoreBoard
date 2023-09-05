@@ -1,5 +1,6 @@
-package com.smalko.scoreboard.entity;
+package com.smalko.scoreboard.match.model.entity;
 
+import com.smalko.scoreboard.player.model.entity.Players;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +18,13 @@ public class Matches {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "player1_id")
+    @JoinColumn(unique = true, nullable = false)
     private Players playersOneId;
     @ManyToOne
-    @JoinColumn(name = "player2_id")
+    @JoinColumn(unique = true, nullable = false)
     private Players playersTwoId;
 
     @ManyToOne
-    @JoinColumn(name = "winner")
+    @JoinColumn(unique = true, nullable = false)
     private Players winner;
 }
