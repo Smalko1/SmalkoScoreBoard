@@ -9,21 +9,26 @@
 <html>
 <head>
     <title>Title</title>
+    <link rel="stylesheet" href="css/newMatchStyle.css">
 </head>
 <body>
-<form align="center" action="" method="post">
-    <h1>Create new Match</h1><br>
-    <label for="playerOneName">
-        Firs player:<input type="text" placeholder="Firs player" name="playerOne" id="playerOneName">
-    </label><br><br>
+<header class="center">
+    <h1>Create new Match</h1>
+</header>
+<main>
+    <form align="center" action="" method="post">
+        <label for="playerOneName">
+            Firs player:<input type="text" placeholder="Firs player" name="playerOne" id="playerOneName">
+        </label><br><br>
 
-    <label for="playerTwoName">
-        Second player :<input type="text" placeholder="Second player" name="playerTwo" id="playerTwoName">
-    </label><br><br>
+        <label for="playerTwoName">
+            Second player :<input type="text" placeholder="Second player" name="playerTwo" id="playerTwoName">
+        </label><br><br>
 
-    <button type="submit">Start Game</button>
-    <br>
+        <button type="submit">Start Game</button>
+        <br>
 
-</form>
+    </form>
+</main>
 </body>
 </html>

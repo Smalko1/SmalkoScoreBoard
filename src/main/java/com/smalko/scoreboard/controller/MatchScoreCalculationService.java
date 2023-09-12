@@ -7,9 +7,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchScoreCalculationService {
 
-    private final MatchScoreModel matchScoreModel;
+    private static MatchScoreModel matchScoreModel;
 
-    public void addPoint(int playerScoredId) {
+    private static boolean isWon;
+    public static boolean isWonAddPoint(int playerScoredId){
+        isWon = false;
+        addPoint(playerScoredId);
+        return isWon;
+    }
+
+    private static void addPoint(int playerScoredId) {
         var point = matchScoreModel.getPoint();
         boolean isFirst = false;
         Points opponentPoint = null;
@@ -28,21 +35,14 @@ public class MatchScoreCalculationService {
             case FIFTEEN_15 -> playerScored = Points.THIRTY_30;
             case THIRTY_30 -> playerScored = Points.FORTY_40;
             case FORTY_40 -> {
-                if (opponentPoint != Points.FORTY_40) {
+                if (opponentPoint != Points.FORTY_40 && opponentPoint != Points.ADVANTAGE_AD) {
                     plusGame(isFirst);
                     return;
-                } else {
-                    opponentPoint = Points.LESS;
+                } else if (opponentPoint == Points.ADVANTAGE_AD) {
+                    opponentPoint = Points.FORTY_40;
+                }else {
                     playerScored = Points.ADVANTAGE_AD;
                 }
-            }
-            case EVENLY -> {
-                playerScored = Points.ADVANTAGE_AD;
-                opponentPoint = Points.LESS;
-            }
-            case LESS -> {
-                playerScored = Points.EVENLY;
-                opponentPoint = Points.EVENLY;
             }
             case ADVANTAGE_AD -> {
                 plusGame(isFirst);
@@ -53,7 +53,7 @@ public class MatchScoreCalculationService {
         newPointList(playerScored, opponentPoint, isFirst);
     }
 
-    private void plusGame(boolean isFirst) {
+    private static void plusGame(boolean isFirst) {
         matchScoreModel.setPoint(List.of(Points.ZERO_0, Points.ZERO_0));
         var gameList = matchScoreModel.getGame();
         int playerScored;
@@ -74,7 +74,7 @@ public class MatchScoreCalculationService {
         newGameList(playerScored ,opponent ,isFirst);
     }
 
-    private void plusSet(boolean isFirst) {
+    private static void plusSet(boolean isFirst) {
         matchScoreModel.setGame(List.of(0, 0));
         var setList = matchScoreModel.getSet();
         int playerScored = 0;
@@ -88,26 +88,26 @@ public class MatchScoreCalculationService {
         }
         playerScored++;
         if (playerScored - opponent > 2 && playerScored >= 4){
-            System.out.println("Перемога");
+            isWon = true;
             return;
         }
         newSetList(playerScored, opponent, isFirst);
     }
 
-    private void newSetList(int playerScored, int opponent, boolean isFirst) {
+    private static void newSetList(int playerScored, int opponent, boolean isFirst) {
         matchScoreModel.setSet(isFirst
                 ? List.of(playerScored, opponent)
                 : List.of(opponent, playerScored));
     }
 
-    private void newGameList(int playerScored, int opponent, boolean isFirst) {
+    private static void newGameList(int playerScored, int opponent, boolean isFirst) {
         matchScoreModel.setGame(isFirst
                 ? List.of(playerScored, opponent)
                 : List.of(opponent, playerScored));
     }
 
 
-    private void newPointList(Points playerScored, Points opponentPoint, boolean isFirst) {
+    private static void newPointList(Points playerScored, Points opponentPoint, boolean isFirst) {
         matchScoreModel.setPoint(isFirst
                 ? List.of(playerScored, opponentPoint)
                 : List.of(opponentPoint, playerScored));

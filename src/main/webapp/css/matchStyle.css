@@ -1,0 +1,49 @@
+body{
+    background: beige;
+    height: 100%;
+    margin: 0;
+}
+
+header{
+    background: #D2B48C;
+    font-size: 40px;
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+}
+
+main {
+    margin-top: 5%;
+    margin-right: 25%;
+    margin-left: 25%;
+    /*font-size: 24px;*/
+    border: 2px solid black;
+}
+
+h2{
+    font-size: 45px;
+    /*border: 1px solid black;*/
+    padding-top: 15px;
+    padding-bottom: 1px;
+}
+table, tr, td{
+    border-spacing: 70px 25px;
+    text-align: center;
+    font-size: 24px;
+}
+
+section{
+    display: inline-block;
+    padding: 10px 5%;
+    font-size: 24px;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button{
+    font-size: 24px;
+}

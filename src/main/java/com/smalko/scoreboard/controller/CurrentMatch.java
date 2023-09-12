@@ -19,5 +19,10 @@ public class CurrentMatch {
         this.uuid = uuid;
         this.playersOne = playersOne;
         this.playersTwo = playersTwo;
+        this.matchScoreModel = new MatchScoreModel();
+    }
+
+    public void setWinner(int playerId){
+        winner = playerId == 1 ? playersOne : playersTwo;
     }
 }

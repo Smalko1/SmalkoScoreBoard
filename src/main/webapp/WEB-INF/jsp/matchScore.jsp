@@ -1,56 +1,51 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: admin
-  Date: 04.09.2023
-  Time: 9:11 AM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Title</title>
+    <link rel="stylesheet" href="css/matchStyle.css">
 </head>
 <body>
-    <style>
-        *{
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
 
-    <header>
-        <h1>Tennis scoreboard</h1>
-    </header>
-    <main>
+<header class="center">
+    <h1 class="center">Scoreboard</h1>
+</header>
+
+<main>
+    <h2 class="center">Match</h2>
+    <section class="center">
         <table>
-            <thead>
-                <tr>
-                    <th><h3>Name Player</h3></th>
-                    <th><h3>Set</h3></th>
-                    <th><h3>Game</h3></th>
-                    <th><h3>Point</h3></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><h2>PlayerOne</h2></td>
-                    <td><h2>2</h2></td>
-                    <td><h2>5</h2></td>
-                    <td><h2>40</h2></td>
-                </tr>
-                <tr>
-                    <td><h2>PlayerTwo</h2></td>
-                    <td><h2>1</h2></td>
-                    <td><h2>6</h2></td>
-                    <td><h2>30</h2></td>
-                </tr>
-            </tbody>
+            <tr>
+                <td>Set</td>
+                <td>Game</td>
+                <td>Point</td>
+                <td>Players</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>${requestScope.setOnePlayer}</td>
+                <td>${requestScope.gameOnePlayer}</td>
+                <td>${requestScope.pointOnePlayer}</td>
+                <td>${requestScope.playerOne}</td>
+                <td>
+                    <form action="#" method="post">
+                        <button type="submit" class="button" name="player" value="0">Goal</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>${requestScope.setTowPlayer}</td>
+                <td>${requestScope.gameTwoPlayer}</td>
+                <td>${requestScope.pointTwoPlayer}</td>
+                <td>${requestScope.playerTwo}</td>
+                <td>
+                    <form action="#" method="post">
+                        <button type="submit" class="button" name="player" value="1">Goal</button>
+                    </form>
+                </td>
+            </tr>
         </table>
-    </main>
-
+    </section>
+</main>
 </body>
 </html>
