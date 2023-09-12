@@ -19,7 +19,7 @@ import java.lang.reflect.Proxy;
 public class main {
 
     public static void main(String[] args) {
-        try (var sessionFactory = HibernateUtil.getSession()) {
+        try (var sessionFactory = HibernateUtil.sessionFactory()) {
             var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(),
                     new Class[]{Session.class},
                     (o, method, objects) -> method.invoke(sessionFactory.getCurrentSession(), objects));
