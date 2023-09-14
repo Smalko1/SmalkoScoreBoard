@@ -3,6 +3,7 @@ package com.smalko.scoreboard.controller;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class MatchScoreCalculationService {
@@ -10,9 +11,11 @@ public class MatchScoreCalculationService {
     private static MatchScoreModel matchScoreModel;
 
     private static boolean isWon;
-    public static boolean isWonAddPoint(int playerScoredId){
+    public static boolean isWonAddPoint(int playerScoredId, UUID uuid){
+        matchScoreModel = OngoingMatchesService.getInstance().getMatch(uuid).getMatchScoreModel();
         isWon = false;
         addPoint(playerScoredId);
+        OngoingMatchesService.getInstance().getMatch(uuid).setMatchScoreModel(matchScoreModel);
         return isWon;
     }
 
@@ -66,7 +69,7 @@ public class MatchScoreCalculationService {
             opponent = gameList.get(0);
         }
         playerScored++;
-        if (playerScored - opponent > 2 && playerScored >= 7){
+        if (playerScored - opponent > 1 && playerScored >= 6){
             plusSet(isFirst);
             return;
         }
@@ -87,7 +90,7 @@ public class MatchScoreCalculationService {
             opponent = setList.get(0);
         }
         playerScored++;
-        if (playerScored - opponent > 2 && playerScored >= 4){
+        if (playerScored - opponent >= 2 && playerScored >= 2){
             isWon = true;
             return;
         }

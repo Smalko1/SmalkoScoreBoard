@@ -1,5 +1,6 @@
 package com.smalko.scoreboard.controller.servlet;
 
+import com.smalko.scoreboard.controller.FinishedMatchesPersistenceService;
 import com.smalko.scoreboard.controller.Helper;
 import com.smalko.scoreboard.controller.MatchScoreCalculationService;
 import com.smalko.scoreboard.controller.OngoingMatchesService;
@@ -32,10 +33,11 @@ public class MatchScoreServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int playerId = Integer.parseInt(request.getParameter("player"));
 
-        if (MatchScoreCalculationService.isWonAddPoint(playerId)) {
+        if (MatchScoreCalculationService.isWonAddPoint(playerId, uuid)) {
             ongoingMatches.getMatch(uuid).setWinner(playerId);
-
+            FinishedMatchesPersistenceService.finishedMatches(uuid);
             ongoingMatches.removeMatch(uuid);
+            response.sendRedirect("/app/matches");
         } else
             response.sendRedirect("/app/match-score?uuid=" + uuid);
     }
