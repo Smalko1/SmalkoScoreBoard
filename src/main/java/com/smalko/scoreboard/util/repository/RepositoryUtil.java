@@ -1,6 +1,7 @@
 package com.smalko.scoreboard.util.repository;
 
 import jakarta.persistence.EntityManager;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public abstract class RepositoryUtil<K extends Serializable, E> implements Repository<K, E>{
 
     private final Class<E> clazz;
+    @Getter
     private final EntityManager entityManager;
     @Override
     public E save(E entity) {

@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
+import org.hibernate.Session;
 
 import java.util.Optional;
 
@@ -24,14 +25,12 @@ public class PlayerService {
     private final PlayerReadMapper playerReadMapper;
 
     @SneakyThrows
-    public static PlayerService openPlayerService(){
-        var session = HibernateUtil.getSession();
-
+    public static PlayerService openPlayerService(Session session){
         var playerReadMapper = new PlayerReadMapper();
         var playerCreateMapper = new PlayerCreateMapper();
         var playerRepository = new PlayerRepository(session);
 
-        var transactionInterceptor = new TransactionInterceptor(HibernateUtil.sessionFactory());
+        var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());
 
         return new ByteBuddy()
                 .subclass(PlayerService.class)
@@ -58,7 +57,8 @@ public class PlayerService {
     }
 
     public Optional<PlayerReadDto> getPlayersForName(String name){
-return null;
+        return playerRepository.findByName(name, HibernateUtil.getSession())
+                .map(players -> new PlayerReadDto(players.getId(), players.getName()));
     }
 
 

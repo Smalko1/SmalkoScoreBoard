@@ -28,9 +28,9 @@ import java.lang.reflect.Proxy;
 public class HibernateUtil {
 
 
-    static {
-        createMatchesPlayers();
-    }
+    //static {
+        //createMatchesPlayers();
+    //}
 
     public static Session getSession() {
         Session session = sessionFactory().openSession();
