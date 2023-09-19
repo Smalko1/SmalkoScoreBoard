@@ -9,7 +9,7 @@
 <html>
 <head>
     <title>Home page</title>
-    <link rel="stylesheet" href="homePage.css">
+    <link rel="stylesheet" href="css/homePage.css">
 </head>
 <body>
     <header class="center">
@@ -17,11 +17,11 @@
     </header>
 
     <main class="center">
-        <form align="" action="" method="post">
+        <form action="#" method="post">
             <button type="submit" class="button" name="newMatch">New Match</button>
         </form>
 
-        <form align="" action="" method="post">
+        <form action="#" method="post">
             <button type="submit" class="button" name="matches">Matches list</button>
         </form>
 </main>

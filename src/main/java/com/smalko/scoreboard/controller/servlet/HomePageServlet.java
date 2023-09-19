@@ -17,6 +17,12 @@ public class HomePageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        var newMatch = request.getParameter("newMatch");
+        var matches = request.getParameter("matches");
 
+        if (newMatch != null){
+            response.sendRedirect("/app/new-match");
+        }else if (matches != null)
+            response.sendRedirect("/app/matches");
     }
 }
