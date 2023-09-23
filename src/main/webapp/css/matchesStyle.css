@@ -1,0 +1,65 @@
+body{
+    background: beige;
+    height: 100%;
+    margin: 0;
+}
+
+header{
+    background: #D2B48C;
+    font-size: 40px;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+main {
+    /*margin-top: 5%;*/
+    margin-right: 25%;
+    margin-left: 25%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 30px;
+    /*border: 2px solid black;*/
+}
+
+section{
+    margin-top: 5%;
+}
+
+table{
+    border: 2px solid black;
+}
+table, tr, td{
+    border-spacing: 90px 25px;
+    text-align: center;
+
+}
+
+form{
+    font-size: 30px;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow-button {
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: wheat;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+.arrow-button.left::before {
+    content: '\2190'; /* Юникод символ стрелки влево */
+}
+
+.arrow-button.right::before {
+    content: '\2192'; /* Юникод символ стрелки вправо */
+}
