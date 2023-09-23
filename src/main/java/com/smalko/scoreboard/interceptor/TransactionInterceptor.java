@@ -1,17 +1,6 @@
 package com.smalko.scoreboard.interceptor;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.Origin;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.implementation.bind.annotation.SuperCall;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-
-import java.lang.reflect.Method;
-import java.util.concurrent.Callable;
-
-@RequiredArgsConstructor
+/*@RequiredArgsConstructor
 public class TransactionInterceptor {
 
     private final SessionFactory sessionFactory;
@@ -42,3 +31,4 @@ public class TransactionInterceptor {
         return result;
     }
 }
+ */

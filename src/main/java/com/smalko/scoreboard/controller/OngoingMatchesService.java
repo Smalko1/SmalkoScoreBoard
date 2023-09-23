@@ -1,17 +1,20 @@
 package com.smalko.scoreboard.controller;
 
+import com.smalko.scoreboard.controller.score.CurrentMatch;
 import com.smalko.scoreboard.player.model.dto.PlayersCreateDto;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 public class OngoingMatchesService {
 
     private static Map<UUID, CurrentMatch> ongoingMatches;
     private static final OngoingMatchesService INSTANCE = new OngoingMatchesService();
+
+    private OngoingMatchesService() {
+    }
+
 
     public void createNewMatch(String playerOne, String playerTwo, UUID uuid){
         ongoingMatches = new HashMap<>();

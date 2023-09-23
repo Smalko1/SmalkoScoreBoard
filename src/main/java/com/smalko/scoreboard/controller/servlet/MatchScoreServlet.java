@@ -1,8 +1,8 @@
 package com.smalko.scoreboard.controller.servlet;
 
 import com.smalko.scoreboard.controller.FinishedMatchesPersistenceService;
-import com.smalko.scoreboard.controller.Helper;
-import com.smalko.scoreboard.controller.MatchScoreCalculationService;
+import com.smalko.scoreboard.controller.score.Scores;
+import com.smalko.scoreboard.controller.score.MatchScoreCalculationService;
 import com.smalko.scoreboard.controller.OngoingMatchesService;
 import com.smalko.scoreboard.util.JspHelper;
 import jakarta.servlet.ServletException;
@@ -48,13 +48,13 @@ public class MatchScoreServlet extends HttpServlet {
         var PlayerOne = match.getPlayersOne().name();
         var PlayerTwo = match.getPlayersTwo().name();
 
-        Helper helper = new Helper(uuid);
-        request.setAttribute("setOnePlayer", helper.getSet(0));
-        request.setAttribute("gameOnePlayer", helper.getGame(0));
-        request.setAttribute("pointOnePlayer", helper.getPoint(0).getNumericValue());
-        request.setAttribute("setTowPlayer", helper.getSet(1));
-        request.setAttribute("gameTwoPlayer", helper.getGame(1));
-        request.setAttribute("pointTwoPlayer", helper.getPoint(1).getNumericValue());
+        Scores scores = new Scores(uuid);
+        request.setAttribute("setOnePlayer", scores.getSet(0));
+        request.setAttribute("gameOnePlayer", scores.getGame(0));
+        request.setAttribute("pointOnePlayer", scores.getPoint(0).getNumericValue());
+        request.setAttribute("setTowPlayer", scores.getSet(1));
+        request.setAttribute("gameTwoPlayer", scores.getGame(1));
+        request.setAttribute("pointTwoPlayer", scores.getPoint(1).getNumericValue());
         request.setAttribute("playerOne", PlayerOne);
         request.setAttribute("playerTwo", PlayerTwo);
     }

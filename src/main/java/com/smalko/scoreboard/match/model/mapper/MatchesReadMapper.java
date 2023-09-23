@@ -9,23 +9,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MatchesReadMapper implements Mapper<Matches, MatchesReadDto> {
     private final PlayerReadMapper playerReadMapper;
+    private static final String UNICODE_CUP = " \uD83C\uDFC6";
+
     @Override
     public MatchesReadDto mapFrom(Matches object) {
+        var winner = object.getWinner();
+        var playersOneId = object.getPlayersOneId();
+        var playersTwoId = object.getPlayersTwoId();
+        if (playersOneId.equals(winner)) {
+            playersOneId.setName(playersOneId.getName() + UNICODE_CUP);
+        } else
+            playersTwoId.setName(playersTwoId.getName() + UNICODE_CUP);
 
-        return  new MatchesReadDto(
+        return new MatchesReadDto(
                 object.getId(),
-                playerReadMapper.mapFrom(object.getPlayersOneId()),
-                playerReadMapper.mapFrom(object.getPlayersTwoId()),
-                playerReadMapper.mapFrom(object.getWinner())
-                );
-        /*
-        return MatchesDto.builder()
-                .id(object.getId())
-                .playersOne(object.getId())
-                .playersTwo(object.getId())
-                .winner(object.getId())
-                .build();
-
-         */
+                playerReadMapper.mapFrom(playersOneId),
+                playerReadMapper.mapFrom(playersTwoId)
+        );
     }
 }

@@ -1,18 +1,9 @@
 package com.smalko.scoreboard;
 
-import com.smalko.scoreboard.player.model.dto.PlayerReadDto;
-import com.smalko.scoreboard.player.model.dto.PlayersCreateDto;
-import com.smalko.scoreboard.player.service.PlayerService;
-import com.smalko.scoreboard.util.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import java.lang.reflect.Proxy;
-
 public class main {
 
     public static void main(String[] args) {
-        var players = new PlayersCreateDto("Petro");
+        /*var players = new PlayersCreateDto("Petro");
         try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
             var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
                     (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
@@ -24,6 +15,9 @@ public class main {
             System.out.println(integer);
         }
 
+         */
+
+        System.out.println(" \uD83C\uDFC6 ");
 
     }
 }

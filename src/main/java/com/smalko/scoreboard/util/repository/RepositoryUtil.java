@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class RepositoryUtil<K extends Serializable, E> implements Repository<K, E>{
-
     private final Class<E> clazz;
     @Getter
     private final EntityManager entityManager;

@@ -8,6 +8,8 @@ import com.smalko.scoreboard.player.service.PlayerService;
 import com.smalko.scoreboard.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
 import java.util.UUID;
@@ -15,24 +17,23 @@ import java.util.UUID;
 public class FinishedMatchesPersistenceService {
 
     private static final OngoingMatchesService ongoingMatches = OngoingMatchesService.getInstance();
+    private static final Logger log = LoggerFactory.getLogger(FinishedMatchesPersistenceService.class);
     private static UUID uuid = null;
-    private static final CurrentMatch march = ongoingMatches.getMatch(uuid);
 
-    public static void finishedMatches(UUID uuid) {
-        setUuid(uuid);
-        var playersOneId = saveInBDPlayers(march.getPlayersOne());
-        var playersTwoId = saveInBDPlayers(march.getPlayersTwo());
-        int winnerId = march.getPlayersOne() == march.getWinner() ? playersOneId : playersTwoId;
-
-        saveMatch(playersOneId, playersTwoId, winnerId);
+    private FinishedMatchesPersistenceService() {
     }
 
-    private static void saveMatch(int playersOneId, int playersTwoId, int winnerId) {
-        try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
-            var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
-                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-            MatchesService.openMatchesService(session).createMatch(new MatchesCreateDto(playersOneId, playersTwoId, winnerId));
-        }
+    public static void finishedMatches(UUID uuid) {
+
+        setUuid(uuid);
+        var match = ongoingMatches.getMatch(uuid);
+        log.info("get {}, in the {}, from its uuid", match, ongoingMatches);
+        var playersOneId = saveInBDPlayers(match.getPlayersOne());
+        var playersTwoId = saveInBDPlayers(match.getPlayersTwo());
+        int winnerId = match.getPlayersOne() == match.getWinner() ? playersOneId : playersTwoId;
+        log.info("Determining the winner's id {}", winnerId);
+
+        saveMatch(playersOneId, playersTwoId, winnerId);
     }
 
 
@@ -41,13 +42,27 @@ public class FinishedMatchesPersistenceService {
         try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
             var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
                     (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-
-            playersId =  PlayerService.openPlayerService(session)
-                    .getPlayersForName(players.name())
+            session.beginTransaction();
+            playersId = PlayerService.openPlayerService(session)
+                    .getPlayersForName(players.name(), session)
                     .map(PlayerReadDto::id)
                     .orElseGet(() -> PlayerService.openPlayerService(session).createPlayer(players));
+            log.info("Check if the player is in the database and return his id, " +
+                     "if he is not, then save the player and return his id");
+            session.beginTransaction().commit();
         }
         return playersId;
+    }
+
+    private static void saveMatch(int playersOneId, int playersTwoId, int winnerId) {
+        try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
+            var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+            session.beginTransaction();
+            MatchesService.openMatchesService(session).createMatch(new MatchesCreateDto(playersOneId, playersTwoId, winnerId));
+            session.beginTransaction().commit();
+        }
+        log.info("Save match and close session");
     }
 
 

@@ -1,24 +1,21 @@
 package com.smalko.scoreboard.player.service;
 
-import com.smalko.scoreboard.interceptor.TransactionInterceptor;
 import com.smalko.scoreboard.player.model.dto.PlayerReadDto;
 import com.smalko.scoreboard.player.model.dto.PlayersCreateDto;
 import com.smalko.scoreboard.player.model.mapper.PlayerCreateMapper;
 import com.smalko.scoreboard.player.model.mapper.PlayerReadMapper;
 import com.smalko.scoreboard.player.model.repository.PlayerRepository;
-import com.smalko.scoreboard.util.HibernateUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class PlayerService {
+    private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
     private final PlayerRepository playerRepository;
     private final PlayerCreateMapper playerCreateMapper;
@@ -30,7 +27,10 @@ public class PlayerService {
         var playerCreateMapper = new PlayerCreateMapper();
         var playerRepository = new PlayerRepository(session);
 
-        var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());
+        var playerService = new PlayerService(playerRepository, playerCreateMapper, playerReadMapper);
+        log.info("Create {}, and its completion", playerService);
+
+        /*var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());
 
         return new ByteBuddy()
                 .subclass(PlayerService.class)
@@ -41,23 +41,27 @@ public class PlayerService {
                 .getLoaded()
                 .getDeclaredConstructor(PlayerRepository.class, PlayerCreateMapper.class, PlayerReadMapper.class)
                 .newInstance(playerRepository, playerCreateMapper, playerReadMapper);
+         */
+        return playerService;
     }
 
 
-    @Transactional
     public Integer createPlayer(PlayersCreateDto playerDto) {
         var playersEntity = playerCreateMapper.mapFrom(playerDto);
-        return playerRepository.save(playersEntity).getId();
+        log.info("Mapping {} is the {}", playersEntity, playerDto);
+        var save = playerRepository.save(playersEntity).getId();
+        log.info("save to the player database");
+        return save;
     }
 
-    @Transactional
     public Optional<PlayerReadDto> getPlayersForId(Integer id) {
         return playerRepository.findById(id)
                 .map(playerReadMapper::mapFrom);
     }
 
-    public Optional<PlayerReadDto> getPlayersForName(String name){
-        return playerRepository.findByName(name, HibernateUtil.getSession())
+    public Optional<PlayerReadDto> getPlayersForName(String name, Session session){
+        log.info("Search players for name: {}", name);
+        return playerRepository.findByName(name, session)
                 .map(players -> new PlayerReadDto(players.getId(), players.getName()));
     }
 

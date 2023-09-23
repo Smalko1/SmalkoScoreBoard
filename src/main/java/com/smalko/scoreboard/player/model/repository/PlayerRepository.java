@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public class PlayerRepository extends RepositoryUtil<Integer, Players> {
 
-
     public PlayerRepository(EntityManager entityManager) {
         super(Players.class, entityManager);
     }
