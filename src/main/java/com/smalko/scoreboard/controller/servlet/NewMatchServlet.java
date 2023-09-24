@@ -1,6 +1,9 @@
 package com.smalko.scoreboard.controller.servlet;
 
 import com.smalko.scoreboard.controller.OngoingMatchesService;
+import com.smalko.scoreboard.exception.IncorrectNameLength;
+import com.smalko.scoreboard.exception.NamesPlayersSame;
+import com.smalko.scoreboard.exception.NoPlayerName;
 import com.smalko.scoreboard.util.JspHelper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -13,7 +16,8 @@ import java.util.UUID;
 
 @WebServlet(name = "newMatch", value = "/new-match")
 public class NewMatchServlet extends HttpServlet {
-        private static final Logger log = LoggerFactory.getLogger(NewMatchServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(NewMatchServlet.class);
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -30,19 +34,31 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        var playerOne = request.getParameter("playerOne");
-        var playerTwo = request.getParameter("playerTwo");
+        var playerOne = request.getParameter("playerOne").replaceAll("[0-9]", "");
+        var playerTwo = request.getParameter("playerTwo").replaceAll("[0-9]", "");
 
-        if (playerOne.replaceAll("[0-9]", "").length() == 0 || playerTwo.replaceAll("[0-9]", "").length() == 0) {
-            log.info("dont write name");
+        try {
+            if (playerOne.length() == 0 || playerTwo.length() == 0) {
+                log.error("There's no player's name");
+                throw new NoPlayerName();
+            } else if (playerOne.equals(playerTwo)) {
+                log.error("The names of the players are the same");
+                throw new NamesPlayersSame();
+            } else if (playerOne.length() < 3
+                       || playerOne.length() > 20
+                       || playerTwo.length() < 3
+                       || playerTwo.length() > 20) {
+                log.error("Incorrect name length");
+                throw new IncorrectNameLength();
+            }
+            var uuid = UUID.randomUUID();
+            var ongoingMatchesService = OngoingMatchesService.getInstance();
+            ongoingMatchesService.createNewMatch(playerOne, playerTwo, uuid);
+
+            response.sendRedirect("/app/match-score?uuid=" + uuid);
+        } catch (NoPlayerName | NamesPlayersSame | IncorrectNameLength e) {
+            request.setAttribute("exception", e.getMessage());
             request.getRequestDispatcher(JspHelper.getPath("newMatch")).include(request, response);
-            return;
         }
-
-        var uuid = UUID.randomUUID();
-        var ongoingMatchesService = OngoingMatchesService.getInstance();
-        ongoingMatchesService.createNewMatch(playerOne, playerTwo, uuid);
-
-        response.sendRedirect("/app/match-score?uuid=" + uuid);
     }
 }

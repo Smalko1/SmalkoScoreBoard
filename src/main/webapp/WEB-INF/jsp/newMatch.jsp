@@ -25,6 +25,7 @@
             Second player :<input type="text" placeholder="Second player" name="playerTwo" id="playerTwoName">
         </label><br><br>
 
+        <h6>${requestScope.exception}</h6>
         <button type="submit">Start Game</button>
         <br>
 
