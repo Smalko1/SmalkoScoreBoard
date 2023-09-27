@@ -85,4 +85,8 @@ public class MatchesService {
         log.info("Search matches for player id {}", matchesForPlayersId);
         return matchesForPlayersId;
     }
+
+    public int getCountMatch(Session session) {
+        return matchesRepository.getCountMatches(session);
+    }
 }

@@ -75,7 +75,7 @@ public class MatchesServlet extends HttpServlet {
         }
         var navigation = Integer.parseInt(request.getParameter("navigation"));
 
-        if (page + navigation < 0){
+        if (page + navigation < 0 || page + navigation > MATCHES_CONTROLLER.countMatch()){
             return;
         }else
             page += navigation;

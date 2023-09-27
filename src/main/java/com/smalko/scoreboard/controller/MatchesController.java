@@ -16,7 +16,22 @@ import java.util.List;
 public class MatchesController {
     private static final MatchesController INSTANCE = new MatchesController();
     private static final Logger log = LoggerFactory.getLogger(MatchesController.class);
+
     private MatchesController() {
+    }
+
+    public int countMatch(){
+        int count;
+        try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
+            var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+            log.info("crate {} of get count matches", session);
+            session.beginTransaction();
+
+            count = MatchesService.openMatchesService(session).getCountMatch(session);
+            session.getTransaction().commit();
+        }
+        return count;
     }
 
     public List<MatchesReadDto> printMatch(int page) {
@@ -39,12 +54,14 @@ public class MatchesController {
             var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
                     (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
             session.beginTransaction();
+
             var playersForName = PlayerService.openPlayerService(session)
                     .getPlayersForName(searchPlayer, session);
             log.info("Taking players in the search name");
-            if (playersForName.isEmpty()){
+
+            if (playersForName.isEmpty()) {
                 throw new AbsenceOfThisPlayer("This player is missing from the database");
-            }else {
+            } else {
                 matches = MatchesService.openMatchesService(session)
                         .getMatchesForPlayersId(playersForName.get().id(), session);
                 log.info("Taking the {}, with this player {}", matches, playersForName.get().name());

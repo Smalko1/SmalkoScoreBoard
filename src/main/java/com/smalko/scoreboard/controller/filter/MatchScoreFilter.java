@@ -20,9 +20,6 @@ public class MatchScoreFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         try {
             var uuidParameter = request.getParameter("uuid");
-            if (uuidParameter.isEmpty()){
-                throw new NullPointerException("No UUID specified");
-            }
             var uuid = UUID.fromString(uuidParameter);
             if (!matchesService.containsUUID(uuid)) {
                 throw new NoSuchUUID();
