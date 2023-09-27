@@ -28,6 +28,10 @@ public class OngoingMatchesService {
         return ongoingMatches.get(uuid);
     }
 
+    public boolean containsUUID(UUID uuid){
+        return ongoingMatches.containsKey(uuid);
+    }
+
     public void removeMatch(UUID uuid){
         ongoingMatches.remove(uuid);
     }
