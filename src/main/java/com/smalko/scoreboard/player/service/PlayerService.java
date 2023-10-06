@@ -18,16 +18,14 @@ public class PlayerService {
     private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
     private final PlayerRepository playerRepository;
-    private final PlayerCreateMapper playerCreateMapper;
-    private final PlayerReadMapper playerReadMapper;
+    private static final PlayerCreateMapper playerCreateMapper = PlayerCreateMapper.getInstance();
+    private final PlayerReadMapper playerReadMapper = PlayerReadMapper.getInstance();
 
     @SneakyThrows
     public static PlayerService openPlayerService(Session session){
-        var playerReadMapper = new PlayerReadMapper();
-        var playerCreateMapper = new PlayerCreateMapper();
         var playerRepository = new PlayerRepository(session);
 
-        var playerService = new PlayerService(playerRepository, playerCreateMapper, playerReadMapper);
+        var playerService = new PlayerService(playerRepository);
         log.info("Create {}, and its completion", playerService);
 
         /*var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());

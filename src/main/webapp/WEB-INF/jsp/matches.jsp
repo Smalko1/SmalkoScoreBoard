@@ -34,26 +34,13 @@
     </form></h3>
     <h2>Match tabel:</h2>
     <table class="center">
+      <c:forEach var="matches" items="${requestScope.matches}">
       <tr >
-        <td>id</td>
+        <td>${matches.getId}</td>
         <td>PlayersOne</td>
         <td>PlayersTwo</td>
       </tr>
-      <tr>
-        <td>1</td>
-        <td>Smalko</td>
-        <td>Ilona</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Smalko</td>
-        <td>Ilona</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Smalko</td>
-        <td>Ilona</td>
-      </tr>
+      </c:forEach>
     </table>
   </section>
   <form action="" method="post" class="center">

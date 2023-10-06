@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MatchesReadMapper implements Mapper<Matches, MatchesReadDto> {
-    private final PlayerReadMapper playerReadMapper;
+    private final PlayerReadMapper playerReadMapper = PlayerReadMapper.getInstance();
+    private static final MatchesReadMapper INSTANCE = new MatchesReadMapper();
+
     private static final String UNICODE_CUP = " \uD83C\uDFC6";
 
     @Override
@@ -26,5 +28,9 @@ public class MatchesReadMapper implements Mapper<Matches, MatchesReadDto> {
                 playerReadMapper.mapFrom(playersOneId),
                 playerReadMapper.mapFrom(playersTwoId)
         );
+    }
+
+    public static MatchesReadMapper getInstance() {
+        return INSTANCE;
     }
 }

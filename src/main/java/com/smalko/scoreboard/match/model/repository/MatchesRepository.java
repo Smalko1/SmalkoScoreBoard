@@ -4,7 +4,6 @@ import com.smalko.scoreboard.match.model.entity.Matches;
 import com.smalko.scoreboard.util.repository.RepositoryUtil;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
-import org.hibernate.query.criteria.JpaCriteriaQuery;
 
 import java.util.List;
 
@@ -41,11 +40,13 @@ public class MatchesRepository extends RepositoryUtil<Integer, Matches> {
                 .list();
     }
 
-    public int getCountMatches(Session session) {
+    public long getCountMatches(Session session) {
         var cb = session.getCriteriaBuilder();
-        JpaCriteriaQuery<Long> criteria = cb.createQuery(Long.class);
+        var criteria = cb.createQuery(Long.class);
         var from = criteria.from(Matches.class);
         criteria.select(cb.count(from));
-        return Math.toIntExact(session.createQuery(criteria).stream().count());
+
+
+        return session.createQuery(criteria).getSingleResult();
     }
 }

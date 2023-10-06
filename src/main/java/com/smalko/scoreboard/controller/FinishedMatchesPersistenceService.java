@@ -18,14 +18,12 @@ public class FinishedMatchesPersistenceService {
 
     private static final OngoingMatchesService ongoingMatches = OngoingMatchesService.getInstance();
     private static final Logger log = LoggerFactory.getLogger(FinishedMatchesPersistenceService.class);
-    private static UUID uuid = null;
 
     private FinishedMatchesPersistenceService() {
     }
 
     public static void finishedMatches(UUID uuid) {
 
-        setUuid(uuid);
         var match = ongoingMatches.getMatch(uuid);
         log.info("get {}, in the {}, from its uuid", match, ongoingMatches);
         var playersOneId = saveInBDPlayers(match.getPlayersOne());
@@ -63,10 +61,5 @@ public class FinishedMatchesPersistenceService {
             session.beginTransaction().commit();
         }
         log.info("Save match and close session");
-    }
-
-
-    private static void setUuid(UUID uuid) {
-        FinishedMatchesPersistenceService.uuid = uuid;
     }
 }

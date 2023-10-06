@@ -44,22 +44,6 @@ public class MatchesServlet extends HttpServlet {
             log.error("Exception {}, Demonstrating the error to the user, and displaying the list of matches",messageException);
         }
 
-        /*
-        String searchPlayer = request.getParameter("searchPlayer");
-
-        if (searchPlayer == null || searchPlayer.trim().isEmpty()){
-            request.setAttribute("matches", MATCHES_CONTROLLER.printMatch(page));
-        }else {
-            try {
-                request.setAttribute("matchesForPlayerSearch", MATCHES_CONTROLLER.printMatchForPlayer(searchPlayer));
-            } catch (AbsenceOfThisPlayer e) {
-                request.setAttribute("exception", e.getMessage());
-                request.setAttribute("matches", MATCHES_CONTROLLER.printMatch(page));
-            }
-        }
-         */
-
-
         request.getRequestDispatcher(JspHelper.getPath("matches"))
                 .forward(request, response);
     }
