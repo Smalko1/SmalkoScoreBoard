@@ -108,7 +108,6 @@ public class MatchScoreCalculationService {
 
         if (playerScored - opponent == 0 && playerScored == 6) {
             isTiebreak = true;
-            return;
         }
         if (playerScored - opponent > 1 && playerScored >= 6) {
             plusSet();
