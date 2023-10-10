@@ -27,5 +27,6 @@ public class HomePageServlet extends HttpServlet {
             response.sendRedirect("/app/new-match");
         }else if (matches != null)
             response.sendRedirect("/app/matches");
+
     }
 }
