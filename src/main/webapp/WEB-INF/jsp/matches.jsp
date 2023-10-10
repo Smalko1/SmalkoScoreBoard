@@ -37,8 +37,8 @@
       <c:forEach var="matches" items="${requestScope.matches}">
       <tr >
         <td>${matches.getId}</td>
-        <td>PlayersOne</td>
-        <td>PlayersTwo</td>
+        <td>${matches.playersOne().name()}</td>
+        <td>${matches.playersTwo().name()}</td>
       </tr>
       </c:forEach>
     </table>

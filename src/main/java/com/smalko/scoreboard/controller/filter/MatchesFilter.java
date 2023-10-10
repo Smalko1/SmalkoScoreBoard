@@ -29,7 +29,7 @@ public class MatchesFilter implements Filter {
                 throw new WrongPage();
             }
             chain.doFilter(request, response);
-        }catch (WrongPage e){
+        }catch (WrongPage | NullPointerException e){
             log.error(e.getMessage());
             ((HttpServletResponse) response).sendRedirect("/app/matches");
         }
