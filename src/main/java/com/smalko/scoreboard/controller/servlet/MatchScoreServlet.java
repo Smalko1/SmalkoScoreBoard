@@ -37,7 +37,7 @@ public class MatchScoreServlet extends HttpServlet {
             ongoingMatches.getMatch(uuid).setWinner(playerId);
             FinishedMatchesPersistenceService.finishedMatches(uuid);
             ongoingMatches.removeMatch(uuid);
-            response.sendRedirect("/app/matches");
+            response.sendRedirect("/app/home");
         } else
             response.sendRedirect("/app/match-score?uuid=" + uuid);
     }

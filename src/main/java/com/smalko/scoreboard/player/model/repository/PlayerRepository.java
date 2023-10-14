@@ -1,10 +1,10 @@
 package com.smalko.scoreboard.player.model.repository;
 
+import com.smalko.scoreboard.exception.AbsenceOfThisPlayer;
 import com.smalko.scoreboard.player.model.entity.Players;
 import com.smalko.scoreboard.util.repository.RepositoryUtil;
 import jakarta.persistence.EntityManager;
-
-import java.util.Optional;
+import jakarta.persistence.NoResultException;
 
 public class PlayerRepository extends RepositoryUtil<Integer, Players> {
 
@@ -13,13 +13,16 @@ public class PlayerRepository extends RepositoryUtil<Integer, Players> {
         super(Players.class, entityManager);
     }
 
-    public Optional<Players> findByName(String name, EntityManager entityManager) {
+    public Players findByName(String name, EntityManager entityManager) throws AbsenceOfThisPlayer{
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteria = criteriaBuilder.createQuery(Players.class);
         var from = criteria.from(Players.class);
-        criteria.select(from).where(criteriaBuilder.equal(from.get("name"), name));
-        return entityManager.createQuery(criteria)
-                .getResultStream()
-                .findFirst();
+        criteria.select(from)
+                .where(criteriaBuilder.equal(from.get("name"), name));
+        try {
+            return entityManager.createQuery(criteria).getSingleResult();
+        }catch (NoResultException e){
+            throw new AbsenceOfThisPlayer();
+        }
     }
 }

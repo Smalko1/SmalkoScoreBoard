@@ -6,6 +6,8 @@ import com.smalko.scoreboard.match.service.MatchesService;
 import com.smalko.scoreboard.player.service.PlayerService;
 import com.smalko.scoreboard.util.HibernateUtil;
 import jakarta.persistence.EntityManager;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +15,14 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MatchesController {
     private static final Logger log = LoggerFactory.getLogger(MatchesController.class);
 
-    private MatchesController() {
-    }
-
-    public static long countMatch(){
+    public static long countMatch() {
         long count;
         try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
-            var entityManager  = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
+            var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
                     (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
             log.info("crate {} of get count matches", entityManager);
             entityManager.getTransaction().begin();
@@ -59,16 +59,11 @@ public class MatchesController {
                     .getPlayersForName(searchPlayer, entityManager);
             log.info("Taking players in the search name");
 
-            if (playersForName.isEmpty()) {
-                throw new AbsenceOfThisPlayer("This player is missing from the database");
-            } else {
-                matches = MatchesService.openMatchesService(entityManager)
-                        .getMatchesForPlayersId(playersForName.get().id(), entityManager);
-                log.info("Taking the {}, with this player {}", matches, playersForName.get().name());
-            }
+            matches = MatchesService.openMatchesService(entityManager)
+                    .getMatchesForPlayersId(playersForName.id(), entityManager);
+            log.info("Taking the {}, with this player {}", matches, playersForName.name());
             entityManager.getTransaction().commit();
         }
         return matches;
     }
-
 }

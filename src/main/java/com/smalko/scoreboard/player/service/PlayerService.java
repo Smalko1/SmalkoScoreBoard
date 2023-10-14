@@ -1,5 +1,6 @@
 package com.smalko.scoreboard.player.service;
 
+import com.smalko.scoreboard.exception.AbsenceOfThisPlayer;
 import com.smalko.scoreboard.player.model.dto.PlayerReadDto;
 import com.smalko.scoreboard.player.model.dto.PlayersCreateDto;
 import com.smalko.scoreboard.player.model.mapper.PlayerCreateMapper;
@@ -22,26 +23,13 @@ public class PlayerService {
     private final PlayerReadMapper playerReadMapper;
 
     @SneakyThrows
-    public static PlayerService openPlayerService(EntityManager entityManager){
+    public static PlayerService openPlayerService(EntityManager entityManager) {
         var playerRepository = new PlayerRepository(entityManager);
         var playerCreateMapper = new PlayerCreateMapper();
         var playerReadMapper = new PlayerReadMapper();
 
         var playerService = new PlayerService(playerRepository, playerCreateMapper, playerReadMapper);
         log.info("Create {}, and its completion", playerService);
-
-        /*var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());
-
-        return new ByteBuddy()
-                .subclass(PlayerService.class)
-                .method(ElementMatchers.any())
-                .intercept(MethodDelegation.to(transactionInterceptor))
-                .make()
-                .load(PlayerService.class.getClassLoader())
-                .getLoaded()
-                .getDeclaredConstructor(PlayerRepository.class, PlayerCreateMapper.class, PlayerReadMapper.class)
-                .newInstance(playerRepository, playerCreateMapper, playerReadMapper);
-         */
         return playerService;
     }
 
@@ -59,13 +47,10 @@ public class PlayerService {
                 .map(playerReadMapper::mapFrom);
     }
 
-    public Optional<PlayerReadDto> getPlayersForName(String name, EntityManager entityManager){
+    public PlayerReadDto getPlayersForName(String name, EntityManager entityManager) throws AbsenceOfThisPlayer {
         log.info("Search players for name: {}", name);
-        return playerRepository.findByName(name, entityManager)
-                .map(players -> new PlayerReadDto(players.getId(), players.getName()));
+        var player = playerRepository.findByName(name, entityManager);
+        return new PlayerReadDto(player.getId(), player.getName());
     }
-
-
-
 }
 

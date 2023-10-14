@@ -67,8 +67,8 @@ public class main {
             session.getTransaction().commit();
         }
          */
-        //var i = MatchesController.countMatch();
-        //System.err.println(i);
+        var i = MatchesController.countMatch();
+        System.err.println(i);
 
         var matchesReadDtos = MatchesController.printMatch(1);
         System.err.println(matchesReadDtos);
