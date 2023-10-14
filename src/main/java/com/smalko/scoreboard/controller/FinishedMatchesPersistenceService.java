@@ -6,6 +6,7 @@ import com.smalko.scoreboard.player.model.dto.PlayerReadDto;
 import com.smalko.scoreboard.player.model.dto.PlayersCreateDto;
 import com.smalko.scoreboard.player.service.PlayerService;
 import com.smalko.scoreboard.util.HibernateUtil;
+import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -38,16 +39,14 @@ public class FinishedMatchesPersistenceService {
     private static int saveInBDPlayers(PlayersCreateDto players) {
         int playersId;
         try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
-            var session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+            var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
                     (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-            session.beginTransaction();
-            playersId = PlayerService.openPlayerService(session)
-                    .getPlayersForName(players.name(), session)
+            playersId = PlayerService.openPlayerService(entityManager)
+                    .getPlayersForName(players.name(), entityManager)
                     .map(PlayerReadDto::id)
-                    .orElseGet(() -> PlayerService.openPlayerService(session).createPlayer(players));
+                    .orElseGet(() -> PlayerService.openPlayerService(entityManager).createPlayer(players));
             log.info("Check if the player is in the database and return his id, " +
                      "if he is not, then save the player and return his id");
-            session.beginTransaction().commit();
         }
         return playersId;
     }

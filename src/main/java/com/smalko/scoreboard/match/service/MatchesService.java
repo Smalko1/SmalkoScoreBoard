@@ -6,8 +6,8 @@ import com.smalko.scoreboard.match.model.mapper.MatchesCreateMapper;
 import com.smalko.scoreboard.match.model.mapper.MatchesReadMapper;
 import com.smalko.scoreboard.match.model.repository.MatchesRepository;
 import com.smalko.scoreboard.player.model.repository.PlayerRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,26 +19,15 @@ public class MatchesService {
     private static final Logger log = LoggerFactory.getLogger(MatchesService.class);
     private final MatchesRepository matchesRepository;
     private final MatchesCreateMapper matchesCreateMapper;
-    private final MatchesReadMapper matchesReadMapper = MatchesReadMapper.getInstance();
+    private final MatchesReadMapper matchesReadMapper;
 
-    public static MatchesService openMatchesService(Session session){
-        var playerRepository = new PlayerRepository(session);
-        var matchesRepository = new MatchesRepository(session);
+    public static MatchesService openMatchesService(EntityManager entityManager){
+        var playerRepository = new PlayerRepository(entityManager);
+        var matchesRepository = new MatchesRepository(entityManager);
         var matchesCreateMapper = new MatchesCreateMapper(playerRepository);
+        var matchesReadMapper = new MatchesReadMapper();
 
-        /*var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());
-
-        return new ByteBuddy()
-                .subclass(MatchesService.class)
-                .method(ElementMatchers.any())
-                .intercept(MethodDelegation.to(transactionInterceptor))
-                .make()
-                .load(MatchesService.class.getClassLoader())
-                .getLoaded()
-                .getDeclaredConstructor(MatchesRepository.class, MatchesCreateMapper.class, MatchesReadMapper.class)
-                .newInstance(matchesRepository, matchesCreateMapper, matchesReadMapper);
-         */
-        var matchesService = new MatchesService(matchesRepository, matchesCreateMapper);
+        var matchesService = new MatchesService(matchesRepository, matchesCreateMapper, matchesReadMapper);
         log.info("Create {}, and its completion", matchesService);
         return matchesService;
     }
@@ -61,11 +50,11 @@ public class MatchesService {
         log.info("Create match");
     }
 
-    public List<MatchesReadDto> findMatchesInPage(int page, Session session){
-        int offset = page * 5 + 1;
+    public List<MatchesReadDto> findMatchesInPage(int page, EntityManager entityManager){
+        int offset = page * 5;
         int limit = offset + 5;
         log.info("limit and offset calculation");
-        var matches = matchesRepository.findMatchesInPage(offset, limit, session)
+        var matches = matchesRepository.findMatchesInPage(offset, limit, entityManager)
                 .stream()
                 .map(matchesReadMapper::mapFrom)
                 .toList();
@@ -74,8 +63,8 @@ public class MatchesService {
 
     }
 
-    public List<MatchesReadDto> getMatchesForPlayersId(int playerId, Session session) {
-        var matchesForPlayersId = matchesRepository.findMatchesForPlayersId(playerId, session)
+    public List<MatchesReadDto> getMatchesForPlayersId(int playerId, EntityManager entityManager) {
+        var matchesForPlayersId = matchesRepository.findMatchesForPlayersId(playerId, entityManager)
                 .stream()
                 .map(matchesReadMapper::mapFrom)
                 .toList();
@@ -83,7 +72,7 @@ public class MatchesService {
         return matchesForPlayersId;
     }
 
-    public long getCountMatch(Session session) {
-        return matchesRepository.getCountMatches(session);
+    public long getCountMatch(EntityManager entityManager) {
+        return matchesRepository.getCountMatches(entityManager);
     }
 }

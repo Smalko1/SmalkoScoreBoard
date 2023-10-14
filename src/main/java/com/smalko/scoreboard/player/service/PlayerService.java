@@ -5,9 +5,9 @@ import com.smalko.scoreboard.player.model.dto.PlayersCreateDto;
 import com.smalko.scoreboard.player.model.mapper.PlayerCreateMapper;
 import com.smalko.scoreboard.player.model.mapper.PlayerReadMapper;
 import com.smalko.scoreboard.player.model.repository.PlayerRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,14 +18,16 @@ public class PlayerService {
     private static final Logger log = LoggerFactory.getLogger(PlayerService.class);
 
     private final PlayerRepository playerRepository;
-    private static final PlayerCreateMapper playerCreateMapper = PlayerCreateMapper.getInstance();
-    private final PlayerReadMapper playerReadMapper = PlayerReadMapper.getInstance();
+    private final PlayerCreateMapper playerCreateMapper;
+    private final PlayerReadMapper playerReadMapper;
 
     @SneakyThrows
-    public static PlayerService openPlayerService(Session session){
-        var playerRepository = new PlayerRepository(session);
+    public static PlayerService openPlayerService(EntityManager entityManager){
+        var playerRepository = new PlayerRepository(entityManager);
+        var playerCreateMapper = new PlayerCreateMapper();
+        var playerReadMapper = new PlayerReadMapper();
 
-        var playerService = new PlayerService(playerRepository);
+        var playerService = new PlayerService(playerRepository, playerCreateMapper, playerReadMapper);
         log.info("Create {}, and its completion", playerService);
 
         /*var transactionInterceptor = new TransactionInterceptor(session.getSessionFactory());
@@ -57,9 +59,9 @@ public class PlayerService {
                 .map(playerReadMapper::mapFrom);
     }
 
-    public Optional<PlayerReadDto> getPlayersForName(String name, Session session){
+    public Optional<PlayerReadDto> getPlayersForName(String name, EntityManager entityManager){
         log.info("Search players for name: {}", name);
-        return playerRepository.findByName(name, session)
+        return playerRepository.findByName(name, entityManager)
                 .map(players -> new PlayerReadDto(players.getId(), players.getName()));
     }
 

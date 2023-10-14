@@ -13,7 +13,6 @@ import java.io.IOException;
 @WebFilter(filterName = "MatchesFilter", value = "/matches", servletNames = "MatchesServlet")
 public class MatchesFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(MatchScoreFilter.class);
-    private static final MatchesController MATCHES_CONTROLLER = MatchesController.getInstance();
 
     public void init(FilterConfig config) throws ServletException {
     }
@@ -25,7 +24,7 @@ public class MatchesFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         try {
             var uuidParameter = Integer.parseInt(request.getParameter("page"));
-            if (uuidParameter < 0 || uuidParameter > MATCHES_CONTROLLER.countMatch()){
+            if (uuidParameter < 0 || uuidParameter > MatchesController.countMatch()){
                 throw new WrongPage();
             }
             chain.doFilter(request, response);

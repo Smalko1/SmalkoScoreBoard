@@ -13,8 +13,8 @@ public class MatchesCreateMapper implements Mapper<MatchesCreateDto, Matches> {
     @Override
     public Matches mapFrom(MatchesCreateDto object) {
         return Matches.builder()
-                .playersOneId(playerRepository.findById(object.playersOneId()).orElseThrow(IllegalArgumentException::new))
-                .playersTwoId(playerRepository.findById(object.playersTwoId()).orElseThrow(IllegalArgumentException::new))
+                .playerOneId(playerRepository.findById(object.playersOneId()).orElseThrow(IllegalArgumentException::new))
+                .playerTwoId(playerRepository.findById(object.playersTwoId()).orElseThrow(IllegalArgumentException::new))
                 .winner(playerRepository.findById(object.playersTwoId()).orElseThrow(IllegalArgumentException::new))
                 .build();
     }

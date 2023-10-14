@@ -3,7 +3,6 @@ package com.smalko.scoreboard.match.model.repository;
 import com.smalko.scoreboard.match.model.entity.Matches;
 import com.smalko.scoreboard.util.repository.RepositoryUtil;
 import jakarta.persistence.EntityManager;
-import org.hibernate.Session;
 
 import java.util.List;
 
@@ -12,21 +11,22 @@ public class MatchesRepository extends RepositoryUtil<Integer, Matches> {
         super(Matches.class, entityManager);
     }
 
-    public List<Matches> findMatchesInPage(int offset, int limit, Session session) {
-        var cb = session.getCriteriaBuilder();
+    public List<Matches> findMatchesInPage(int offset, int limit, EntityManager entityManager) {
+        var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Matches.class);
         var from = criteria.from(Matches.class);
 
-        criteria.select(from)
-                .offset(offset)
-                .where(cb.equal(from.get("id"), limit));
+        criteria.select(from);
+        criteria.orderBy(cb.asc(from.get("id")));
+        return entityManager.createQuery(criteria)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
 
-        return session.createQuery(criteria)
-                .list();
     }
 
-    public List<Matches> findMatchesForPlayersId(int playerId, Session session) {
-        var cb = session.getCriteriaBuilder();
+    public List<Matches> findMatchesForPlayersId(int playerId, EntityManager entityManager) {
+        var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Matches.class);
         var from = criteria.from(Matches.class);
 
@@ -36,17 +36,19 @@ public class MatchesRepository extends RepositoryUtil<Integer, Matches> {
                         cb.equal(from.get("playersTwoId"), playerId)
                 ));
 
-        return session.createQuery(criteria)
-                .list();
+        return entityManager.createQuery(criteria)
+                .getResultList();
+
     }
 
-    public long getCountMatches(Session session) {
-        var cb = session.getCriteriaBuilder();
+    public long getCountMatches(EntityManager entityManager) {
+        var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Long.class);
         var from = criteria.from(Matches.class);
         criteria.select(cb.count(from));
 
 
-        return session.createQuery(criteria).getSingleResult();
+        return entityManager.createQuery(criteria)
+                .getSingleResult();
     }
 }

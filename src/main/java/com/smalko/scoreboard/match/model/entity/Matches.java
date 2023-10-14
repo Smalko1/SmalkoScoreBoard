@@ -12,20 +12,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="Matches")
+@Table(name="matches")
 public class Matches {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
-    private Players playersOneId;
+    @JoinColumn(name = "player_one_id", nullable = false)
+    private Players playerOneId;
     @ManyToOne
-    @JoinColumn(nullable = false)
-    private Players playersTwoId;
+    @JoinColumn(name = "player_two_id", nullable = false)
+    private Players playerTwoId;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "winner" ,nullable = false)
     private Players winner;
 }

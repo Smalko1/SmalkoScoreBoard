@@ -15,7 +15,6 @@ import java.io.IOException;
 
 @WebServlet(name = "MatchesServlet", value = "/matches")
 public class MatchesServlet extends HttpServlet {
-    private static final MatchesController MATCHES_CONTROLLER = MatchesController.getInstance();
     private static final Logger log = LoggerFactory.getLogger(MatchesServlet.class);
 
     @Override
@@ -31,16 +30,15 @@ public class MatchesServlet extends HttpServlet {
 
         try {
             var searchPlayer = request.getParameter("searchPlayer").trim();
-            request.setAttribute("matches", MATCHES_CONTROLLER
-                    .printMatchForPlayer(searchPlayer));
+            request.setAttribute("matches", MatchesController.printMatchForPlayer(searchPlayer));
             log.info("search players for name: {}", searchPlayer);
         } catch (NullPointerException e) {
-            request.setAttribute("matches", MATCHES_CONTROLLER.printMatch(page));
+            request.setAttribute("matches", MatchesController.printMatch(page));
             log.info("Demonstration the list of matches");
         } catch (AbsenceOfThisPlayer e) {
             var messageException = e.getMessage();
             request.setAttribute("exception", messageException);
-            request.setAttribute("matches", MATCHES_CONTROLLER.printMatch(page));
+            request.setAttribute("matches", MatchesController.printMatch(page));
             log.error("Exception {}, Demonstrating the error to the user, and displaying the list of matches",messageException);
         }
 
@@ -59,7 +57,7 @@ public class MatchesServlet extends HttpServlet {
         }
         var navigation = Integer.parseInt(request.getParameter("navigation"));
 
-        if (page + navigation < 0 || page + navigation > MATCHES_CONTROLLER.countMatch()){
+        if (page + navigation < 0 || page + navigation > MatchesController.countMatch()){
             return;
         }else
             page += navigation;
