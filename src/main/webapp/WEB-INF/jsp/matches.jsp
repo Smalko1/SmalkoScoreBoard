@@ -25,13 +25,20 @@
   </nav>
   <section>
 
-    <h3><form  action="" method="post">
+    <nav><h3><form  action="" method="get">
       <label for="searchPlayer">
         Player search:  <input type="text" placeholder="player" name="searchPlayer" id="searchPlayer">
-      </label>
-      <button type="submit">Search</button>
+        <c:if test="${requestScope.isSearchPlayer}">
+        <button class="clean-button">Clean player</button>
+        </c:if>
+        <button type="submit">Search</button>
+        <h6>
+          ${requestScope.exception}
+        </h6>
+    </form>
 
-    </form></h3>
+      </h3>
+    </nav>
     <h2>Match tabel:</h2>
     <table class="center">
       <c:forEach var="matches" items="${requestScope.matches}">

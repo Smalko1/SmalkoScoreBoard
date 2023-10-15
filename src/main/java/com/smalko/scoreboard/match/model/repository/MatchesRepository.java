@@ -1,8 +1,12 @@
 package com.smalko.scoreboard.match.model.repository;
 
 import com.smalko.scoreboard.match.model.entity.Matches;
+import com.smalko.scoreboard.player.model.entity.Players;
 import com.smalko.scoreboard.util.repository.RepositoryUtil;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -26,19 +30,20 @@ public class MatchesRepository extends RepositoryUtil<Integer, Matches> {
     }
 
     public List<Matches> findMatchesForPlayersId(int playerId) {
-        var cb = entityManager.getCriteriaBuilder();
-        var criteria = cb.createQuery(Matches.class);
-        var from = criteria.from(Matches.class);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Matches> criteriaQuery = cb.createQuery(Matches.class);
+        Root<Matches> from = criteriaQuery.from(Matches.class);
 
-        criteria.select(from)
+        Players player = entityManager.find(Players.class, playerId);
+
+        criteriaQuery.select(from)
                 .where(cb.or(
-                        cb.equal(from.get("playersOneId"), playerId),
-                        cb.equal(from.get("playersTwoId"), playerId)
+                        cb.equal(from.get("playerOneId"), player),
+                        cb.equal(from.get("playerTwoId"), player)
                 ));
 
-        return entityManager.createQuery(criteria)
+        return entityManager.createQuery(criteriaQuery)
                 .getResultList();
-
     }
 
     public long getCountMatches() {

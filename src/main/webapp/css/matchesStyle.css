@@ -34,8 +34,15 @@ table, tr, td{
 
 }
 
+
 form{
+    display: flex;
+    align-items: center;
     font-size: 30px;
+}
+
+.clean-button {
+    margin-left: 10px;
 }
 
 .center{
