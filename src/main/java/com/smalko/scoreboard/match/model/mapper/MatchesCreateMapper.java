@@ -15,7 +15,7 @@ public class MatchesCreateMapper implements Mapper<MatchesCreateDto, Matches> {
         return Matches.builder()
                 .playerOneId(playerRepository.findById(object.playersOneId()).orElseThrow(IllegalArgumentException::new))
                 .playerTwoId(playerRepository.findById(object.playersTwoId()).orElseThrow(IllegalArgumentException::new))
-                .winner(playerRepository.findById(object.playersTwoId()).orElseThrow(IllegalArgumentException::new))
+                .winner(playerRepository.findById(object.winner()).orElseThrow(IllegalArgumentException::new))
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.smalko.scoreboard;
 
 import com.smalko.scoreboard.controller.MatchesController;
+import com.smalko.scoreboard.match.model.dto.MatchesReadDto;
 
 public class main {
     public static void main(String[] args) {
@@ -71,7 +72,9 @@ public class main {
         System.err.println(i);
 
         var matchesReadDtos = MatchesController.printMatch(1);
-        System.err.println(matchesReadDtos);
+        for (MatchesReadDto matchesReadDto : matchesReadDtos) {
+            System.out.println(matchesReadDto);
+        }
 
 
 

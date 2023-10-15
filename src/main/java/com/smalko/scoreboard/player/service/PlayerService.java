@@ -47,9 +47,9 @@ public class PlayerService {
                 .map(playerReadMapper::mapFrom);
     }
 
-    public PlayerReadDto getPlayersForName(String name, EntityManager entityManager) throws AbsenceOfThisPlayer {
+    public PlayerReadDto getPlayersForName(String name) throws AbsenceOfThisPlayer {
         log.info("Search players for name: {}", name);
-        var player = playerRepository.findByName(name, entityManager);
+        var player = playerRepository.findByName(name);
         return new PlayerReadDto(player.getId(), player.getName());
     }
 }

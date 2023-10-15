@@ -43,7 +43,7 @@ public class FinishedMatchesPersistenceService {
             entityManager.getTransaction().begin();
             try {
                 playersId = PlayerService.openPlayerService(entityManager)
-                        .getPlayersForName(players.name(), entityManager)
+                        .getPlayersForName(players.name())
                         .id();
             } catch (AbsenceOfThisPlayer a) {
                 playersId = PlayerService.openPlayerService(entityManager).createPlayer(players);

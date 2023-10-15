@@ -7,25 +7,25 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class MatchesRepository extends RepositoryUtil<Integer, Matches> {
-    public MatchesRepository(EntityManager entityManager) {
-        super(Matches.class, entityManager);
-    }
+    private final EntityManager entityManager;
 
-    public List<Matches> findMatchesInPage(int offset, int limit, EntityManager entityManager) {
+    public MatchesRepository(Class<Matches> clazz, EntityManager entityManager) {
+        super(clazz, entityManager);
+        this.entityManager = entityManager;
+    }
+    public List<Matches> findMatchesInPage(int offset, int limit) {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Matches.class);
         var from = criteria.from(Matches.class);
 
         criteria.select(from);
-        criteria.orderBy(cb.asc(from.get("id")));
         return entityManager.createQuery(criteria)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
-
     }
 
-    public List<Matches> findMatchesForPlayersId(int playerId, EntityManager entityManager) {
+    public List<Matches> findMatchesForPlayersId(int playerId) {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Matches.class);
         var from = criteria.from(Matches.class);
@@ -41,7 +41,7 @@ public class MatchesRepository extends RepositoryUtil<Integer, Matches> {
 
     }
 
-    public long getCountMatches(EntityManager entityManager) {
+    public long getCountMatches() {
         var cb = entityManager.getCriteriaBuilder();
         var criteria = cb.createQuery(Long.class);
         var from = criteria.from(Matches.class);

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.UUID;
 
-@WebFilter(filterName = "Filter", value = "/match-score", servletNames ="MatchesServlet")
+@WebFilter(filterName = "Filter", value = "/match-score", servletNames ="matchScore")
 public class MatchScoreFilter implements Filter {
     private static final OngoingMatchesService matchesService = OngoingMatchesService.getInstance();
     private static final Logger log = LoggerFactory.getLogger(MatchScoreFilter.class);

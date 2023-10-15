@@ -21,14 +21,6 @@ public class NewMatchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        /*
-          - request.getRequestDispatcher("/s").forward(request,response);
-          можно перенаправить запрос на другую страницю которая будет дальше обрабатовать запрос
-          - request.getRequestDispatcher("/s").include(request,response);
-          можно перенаправить запрос на другую страницю которая
-          будет дальше обрабатовать запрос и вернетця на изначальную эту страницу
-          -response.sendRedirect("адрес") отправляет на другую станицу
-         */
         request.getRequestDispatcher(JspHelper.getPath("newMatch")).include(request, response);
     }
 

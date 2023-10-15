@@ -21,7 +21,7 @@
 </header>
 <main>
   <nav class="center">
-    <a href="http://localhost:8080/app/new-match">Home page</a>
+    <a href="http://localhost:8080/app/home">Home page</a>
   </nav>
   <section>
 
@@ -36,9 +36,9 @@
     <table class="center">
       <c:forEach var="matches" items="${requestScope.matches}">
       <tr >
-        <td>${matches.getId}</td>
-        <td>${matches.getPlayersOne()}</td>
-        <td>${matches.getPlayersTwo()}</td>
+        <td>${matches.id()}</td>
+        <td>${matches.playersOne()}</td>
+        <td>${matches.playersTwo()}</td>
       </tr>
       </c:forEach>
     </table>

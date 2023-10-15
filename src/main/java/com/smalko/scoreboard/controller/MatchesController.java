@@ -41,7 +41,7 @@ public class MatchesController {
             log.info("crate {} of prints matches", entityManager);
 
             entityManager.getTransaction().begin();
-            matches = MatchesService.openMatchesService(entityManager).findMatchesInPage(page, entityManager);
+            matches = MatchesService.openMatchesService(entityManager).findMatchesInPage(page);
             log.info("Taking the {} list on this page", matches);
             entityManager.getTransaction().commit();
         }
@@ -56,11 +56,11 @@ public class MatchesController {
             entityManager.getTransaction().begin();
 
             var playersForName = PlayerService.openPlayerService(entityManager)
-                    .getPlayersForName(searchPlayer, entityManager);
+                    .getPlayersForName(searchPlayer);
             log.info("Taking players in the search name");
 
             matches = MatchesService.openMatchesService(entityManager)
-                    .getMatchesForPlayersId(playersForName.id(), entityManager);
+                    .getMatchesForPlayersId(playersForName.id());
             log.info("Taking the {}, with this player {}", matches, playersForName.name());
             entityManager.getTransaction().commit();
         }

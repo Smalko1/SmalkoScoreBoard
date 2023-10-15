@@ -2,6 +2,7 @@ package com.smalko.scoreboard.match.service;
 
 import com.smalko.scoreboard.match.model.dto.MatchesCreateDto;
 import com.smalko.scoreboard.match.model.dto.MatchesReadDto;
+import com.smalko.scoreboard.match.model.entity.Matches;
 import com.smalko.scoreboard.match.model.mapper.MatchesCreateMapper;
 import com.smalko.scoreboard.match.model.mapper.MatchesReadMapper;
 import com.smalko.scoreboard.match.model.repository.MatchesRepository;
@@ -23,7 +24,7 @@ public class MatchesService {
 
     public static MatchesService openMatchesService(EntityManager entityManager){
         var playerRepository = new PlayerRepository(entityManager);
-        var matchesRepository = new MatchesRepository(entityManager);
+        var matchesRepository = new MatchesRepository(Matches.class, entityManager);
         var matchesCreateMapper = new MatchesCreateMapper(playerRepository);
         var matchesReadMapper = new MatchesReadMapper();
 
@@ -50,21 +51,20 @@ public class MatchesService {
         log.info("Create match");
     }
 
-    public List<MatchesReadDto> findMatchesInPage(int page, EntityManager entityManager){
-        int offset = page * 5;
-        int limit = offset + 5;
-        log.info("limit and offset calculation");
-        var matches = matchesRepository.findMatchesInPage(offset, limit, entityManager)
+    public List<MatchesReadDto> findMatchesInPage(int page){
+        int offset = page * 5 - 5;
+        int limit = 5;
+        log.info("limit {} and offset {} calculation", limit, offset);
+        var matches = matchesRepository.findMatchesInPage(offset, limit)
                 .stream()
                 .map(matchesReadMapper::mapFrom)
                 .toList();
         log.info("match extraction in the DB");
         return matches;
-
     }
 
-    public List<MatchesReadDto> getMatchesForPlayersId(int playerId, EntityManager entityManager) {
-        var matchesForPlayersId = matchesRepository.findMatchesForPlayersId(playerId, entityManager)
+    public List<MatchesReadDto> getMatchesForPlayersId(int playerId) {
+        var matchesForPlayersId = matchesRepository.findMatchesForPlayersId(playerId)
                 .stream()
                 .map(matchesReadMapper::mapFrom)
                 .toList();
@@ -73,6 +73,6 @@ public class MatchesService {
     }
 
     public long getCountMatch(EntityManager entityManager) {
-        return matchesRepository.getCountMatches(entityManager);
+        return matchesRepository.getCountMatches();
     }
 }

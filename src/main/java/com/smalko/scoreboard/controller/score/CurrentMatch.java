@@ -23,6 +23,6 @@ public class CurrentMatch {
     }
 
     public void setWinner(int playerId){
-        winner = playerId == 1 ? playersOne : playersTwo;
+        winner = playerId == 0 ? playersOne : playersTwo;
     }
 }

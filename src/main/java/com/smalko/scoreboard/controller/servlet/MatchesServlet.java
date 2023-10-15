@@ -2,6 +2,7 @@ package com.smalko.scoreboard.controller.servlet;
 
 import com.smalko.scoreboard.controller.MatchesController;
 import com.smalko.scoreboard.exception.AbsenceOfThisPlayer;
+import com.smalko.scoreboard.exception.WrongPage;
 import com.smalko.scoreboard.util.JspHelper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,15 +20,7 @@ public class MatchesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int page;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            log.info("user want to a page = {}", page);
-        } catch (NullPointerException e) {
-            page = 0;
-            log.info("page = {} because: request.getParameter(\"page\") == null", page);
-        }
-
+        int page = givePage(request);
         try {
             var searchPlayer = request.getParameter("searchPlayer").trim();
             request.setAttribute("matches", MatchesController.printMatchForPlayer(searchPlayer));
@@ -48,22 +41,37 @@ public class MatchesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int page;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-        } catch (NullPointerException e) {
-            page = 0;
-            log.info("page = {} because: request.getParameter(\"page\") == null", page);
-        }
+        int page = givePage(request);
+
         var navigation = Integer.parseInt(request.getParameter("navigation"));
 
         if (page + navigation < 0 || page + navigation > MatchesController.countMatch()){
-            return;
         }else
             page += navigation;
 
-        response.sendRedirect("/app/match-score?page=" + page);
+        if(page == 0){
+            response.sendRedirect("/app/matches");
+        }else
+            response.sendRedirect("/app/matches?page=" + page);
+    }
 
+    private static Integer givePage(HttpServletRequest request){
+        int page;
+        try {
+            var pageGetParameter = request.getParameter("page");
+            if (pageGetParameter == null){
+                throw new NullPointerException();
+            }
+            var pageParameter = Integer.parseInt(pageGetParameter);
+            if (pageParameter < 0 || pageParameter > MatchesController.countMatch()){
+                throw new WrongPage();
+            }
+            page = pageParameter;
+        }catch (WrongPage | NullPointerException e){
+            log.error(e.getMessage());
+            page = 1;
+        }
+        return page;
     }
 
 
