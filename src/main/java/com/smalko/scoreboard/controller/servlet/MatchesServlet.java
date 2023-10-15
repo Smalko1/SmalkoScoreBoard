@@ -78,7 +78,8 @@ public class MatchesServlet extends HttpServlet {
                 throw new NullPointerException();
             }
             var pageParameter = Integer.parseInt(pageGetParameter);
-            if (pageParameter < 0 || pageParameter > MatchesController.countMatch()) {
+
+            if (pageParameter < 0 || pageParameter > MatchesController.countMatch() / 5) {
                 throw new WrongPage();
             }
             page = pageParameter;
