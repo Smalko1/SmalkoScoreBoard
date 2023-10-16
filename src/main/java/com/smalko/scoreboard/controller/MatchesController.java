@@ -27,7 +27,7 @@ public class MatchesController {
         log.info("crate {} of get count matches", entityManager);
         entityManager.getTransaction().begin();
 
-        count = MatchesService.openMatchesService(entityManager).getCountMatch(entityManager);
+        count = MatchesService.openMatchesService(entityManager).getCountMatch();
         entityManager.getTransaction().commit();
 
         return count;

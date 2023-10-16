@@ -72,7 +72,7 @@ public class MatchesService {
         return matchesForPlayersId;
     }
 
-    public long getCountMatch(EntityManager entityManager) {
+    public long getCountMatch() {
         return matchesRepository.getCountMatches();
     }
 }
