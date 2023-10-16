@@ -21,49 +21,48 @@ public class MatchesController {
 
     public static long countMatch() {
         long count;
-        try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
-            var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
-                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-            log.info("crate {} of get count matches", entityManager);
-            entityManager.getTransaction().begin();
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
+                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+        log.info("crate {} of get count matches", entityManager);
+        entityManager.getTransaction().begin();
 
-            count = MatchesService.openMatchesService(entityManager).getCountMatch(entityManager);
-            entityManager.getTransaction().commit();
-        }
+        count = MatchesService.openMatchesService(entityManager).getCountMatch(entityManager);
+        entityManager.getTransaction().commit();
+
         return count;
     }
 
     public static List<MatchesReadDto> printMatch(int page) {
         List<MatchesReadDto> matches;
-        try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
-            var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
-                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-            log.info("crate {} of prints matches", entityManager);
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
+                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+        log.info("crate {} of prints matches", entityManager);
 
-            entityManager.getTransaction().begin();
-            matches = MatchesService.openMatchesService(entityManager).findMatchesInPage(page);
-            log.info("Taking the {} list on this page", matches);
-            entityManager.getTransaction().commit();
-        }
+        entityManager.getTransaction().begin();
+        matches = MatchesService.openMatchesService(entityManager).findMatchesInPage(page);
+        log.info("Taking the {} list on this page", matches);
+        entityManager.getTransaction().commit();
+
         return matches;
     }
 
     public static List<MatchesReadDto> printMatchForPlayer(String searchPlayer) throws AbsenceOfThisPlayer {
         List<MatchesReadDto> matches;
-        try (SessionFactory sessionFactory = HibernateUtil.sessionFactory()) {
-            var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
-                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-            entityManager.getTransaction().begin();
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
+                (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+        entityManager.getTransaction().begin();
 
-            var playersForName = PlayerService.openPlayerService(entityManager)
-                    .getPlayersForName(searchPlayer);
-            log.info("Taking players in the search name");
+        var playersForName = PlayerService.openPlayerService(entityManager)
+                .getPlayersForName(searchPlayer);
+        log.info("Taking players in the search name");
 
-            matches = MatchesService.openMatchesService(entityManager)
-                    .getMatchesForPlayersId(playersForName.id());
-            log.info("Taking the {}, with this player {}", matches, playersForName.name());
-            entityManager.getTransaction().commit();
-        }
+        matches = MatchesService.openMatchesService(entityManager)
+                .getMatchesForPlayersId(playersForName.id());
+        log.info("Taking the {}, with this player {}", matches, playersForName.name());
+        entityManager.getTransaction().commit();
         return matches;
     }
 }

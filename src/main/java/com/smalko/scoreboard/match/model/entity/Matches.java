@@ -19,13 +19,13 @@ public class Matches {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "player_one_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Players playerOneId;
     @ManyToOne
-    @JoinColumn(name = "player_two_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Players playerTwoId;
 
     @ManyToOne
-    @JoinColumn(name = "winner" ,nullable = false)
+    @JoinColumn(nullable = false)
     private Players winner;
 }

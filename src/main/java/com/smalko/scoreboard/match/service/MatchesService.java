@@ -47,8 +47,8 @@ public class MatchesService {
     public void createMatch(MatchesCreateDto matchesCreateDto){
         var matches = matchesCreateMapper.mapFrom(matchesCreateDto);
         log.info("Mapping {} is the {}", matches, matchesCreateDto);
-        matchesRepository.save(matches);
-        log.info("Create match");
+        var saveMatch = matchesRepository.save(matches);
+        log.info("Create match {}", saveMatch);
     }
 
     public List<MatchesReadDto> findMatchesInPage(int page){
