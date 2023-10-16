@@ -8,8 +8,21 @@ import org.hibernate.cfg.Configuration;
 
 @UtilityClass
 public class HibernateUtil {
+    private SessionFactory sessionFactory;
 
-    public static SessionFactory sessionFactory() {
+    static {
+        createSessionFactory();
+    }
+
+    private static void createSessionFactory() {
+        sessionFactory = sessionFactory();
+    }
+
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    private static SessionFactory sessionFactory() {
         var configuration = new Configuration();
         configuration.configure();
 
