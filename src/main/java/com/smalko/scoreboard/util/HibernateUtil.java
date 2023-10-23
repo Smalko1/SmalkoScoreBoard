@@ -8,27 +8,32 @@ import org.hibernate.cfg.Configuration;
 
 @UtilityClass
 public class HibernateUtil {
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
-    static {
-        createSessionFactory();
+    private static SessionFactory createSessionFactory() {
+        try {
+            var configuration = new Configuration();
+
+            configuration.configure();
+
+            configuration.addAnnotatedClass(Players.class);
+            configuration.addAnnotatedClass(Matches.class);
+
+            return sessionFactory = configuration.buildSessionFactory();
+        } catch (Throwable ex) {
+
+            System.err.println("Initial SessionFactory creation failed: " + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
     }
 
-    private static void createSessionFactory() {
-        sessionFactory = sessionFactory();
-    }
 
     public static SessionFactory getSessionFactory() {
+
+        if (sessionFactory == null) {
+            sessionFactory = createSessionFactory();
+        }
         return sessionFactory;
-    }
 
-    private static SessionFactory sessionFactory() {
-        var configuration = new Configuration();
-        configuration.configure();
-
-        configuration.addAnnotatedClass(Players.class);
-        configuration.addAnnotatedClass(Matches.class);
-
-        return configuration.buildSessionFactory();
     }
 }
