@@ -15,26 +15,42 @@ import java.lang.reflect.Proxy;
 
 @UtilityClass
 public class HibernateUtil {
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
     static {
-        createSessionFactory();
         databaseCompletion();
     }
 
+
+    private static SessionFactory createSessionFactory() {
+        try {
+            var configuration = new Configuration();
+
+            configuration.configure();
+
+            configuration.addAnnotatedClass(Players.class);
+            configuration.addAnnotatedClass(Matches.class);
+
+            return sessionFactory = configuration.buildSessionFactory();
+        } catch (Throwable ex) {
+
+            System.err.println("Initial SessionFactory creation failed: " + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+
+
     public static SessionFactory getSessionFactory() {
+
+        if (sessionFactory == null) {
+
+            sessionFactory = createSessionFactory();
+
+        }
         return sessionFactory;
+
     }
 
-    private static void createSessionFactory() {
-        var configuration = new Configuration();
-        configuration.configure();
-
-        configuration.addAnnotatedClass(Players.class);
-        configuration.addAnnotatedClass(Matches.class);
-
-        sessionFactory = configuration.buildSessionFactory();
-    }
 
     private static void databaseCompletion() {
         sessionFactory = HibernateUtil.getSessionFactory();

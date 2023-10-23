@@ -30,11 +30,14 @@ public class MatchesServlet extends HttpServlet {
         } catch (NullPointerException e) {
             request.setAttribute("matches", MatchesController.printMatch(page));
             log.info("Demonstration the list of matches");
-        } catch (AbsenceOfThisPlayer | NoPlayerName | IncorrectNameLength e) {
+        } catch (NoPlayerName | IncorrectNameLength e) {
             var messageException = e.getMessage();
             request.setAttribute("exception", messageException);
             request.setAttribute("matches", MatchesController.printMatch(page));
             log.error("Exception {}, Demonstrating the error to the user, and displaying the list of matches", messageException);
+        }catch (AbsenceOfThisPlayer e){
+            System.out.println("Hellpo");
+            request.setAttribute("matches", MatchesController.printMatch(page));
         }
         request.setAttribute("isSearchPlayer", isSearchPlayer);
         request.getRequestDispatcher(JspHelper.getPath("matches"))

@@ -49,20 +49,26 @@ public class MatchesController {
     }
 
     public static List<MatchesReadDto> printMatchForPlayer(String searchPlayer) throws AbsenceOfThisPlayer {
+
         List<MatchesReadDto> matches;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         var entityManager = (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{EntityManager.class},
                 (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
-        entityManager.getTransaction().begin();
+        try {
+            entityManager.getTransaction().begin();
 
-        var playersForName = PlayerService.openPlayerService(entityManager)
-                .getPlayersForName(searchPlayer);
-        log.info("Taking players in the search name");
+            var playersForName = PlayerService.openPlayerService(entityManager)
+                    .getPlayersForName(searchPlayer);
+            log.info("Taking players in the search name");
 
-        matches = MatchesService.openMatchesService(entityManager)
-                .getMatchesForPlayersId(playersForName.id());
-        log.info("Taking the {}, with this player {}", matches, playersForName.name());
-        entityManager.getTransaction().commit();
-        return matches;
+            matches = MatchesService.openMatchesService(entityManager)
+                    .getMatchesForPlayersId(playersForName.id());
+            log.info("Taking the {}, with this player {}", matches, playersForName.name());
+            entityManager.getTransaction().commit();
+            return matches;
+        } catch (AbsenceOfThisPlayer e) {
+            entityManager.getTransaction().commit();
+            return List.of();
+        }
     }
 }
