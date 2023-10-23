@@ -43,18 +43,26 @@ public class MatchesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        var home = request.getParameter("home");
+        if (home != null){
+            response.sendRedirect("/home");
+            return;
+        }
         isSearchPlayer = false;
         int page = givePage(request);
         var navigation = Integer.parseInt(request.getParameter("navigation"));
 
-        if (page + navigation >= 1 && page + navigation <= MatchesController.countMatch()) {
+
+        if (navigation < 0 && page + navigation >= 0){
+            page += navigation;
+        }else if (MatchesController.countMatch() - (page * 5L) >= 1 && navigation > 0){
             page += navigation;
         }
 
         if (page == 1) {
-            response.sendRedirect("/app/matches");
+            response.sendRedirect("/matches");
         } else
-            response.sendRedirect("/app/matches?page=" + page);
+            response.sendRedirect("/matches?page=" + page);
     }
 
     private static String giveSearchName(HttpServletRequest request) throws NoPlayerName, IncorrectNameLength {

@@ -28,7 +28,7 @@ public class MatchScoreFilter implements Filter {
             chain.doFilter(request, response);
         } catch (NoSuchUUID | NullPointerException e) {
             log.error(e.getMessage());
-            ((HttpServletResponse) response).sendRedirect("/app/home");
+            ((HttpServletResponse) response).sendRedirect("/home");
         }
     }
 }

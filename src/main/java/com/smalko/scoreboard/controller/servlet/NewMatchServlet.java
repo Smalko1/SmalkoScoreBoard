@@ -47,7 +47,7 @@ public class NewMatchServlet extends HttpServlet {
             var ongoingMatchesService = OngoingMatchesService.getInstance();
             ongoingMatchesService.createNewMatch(playerOne, playerTwo, uuid);
 
-            response.sendRedirect("/app/match-score?uuid=" + uuid);
+            response.sendRedirect("/match-score?uuid=" + uuid);
         } catch (NoPlayerName | NamesPlayersSame | IncorrectNameLength e) {
             request.setAttribute("exception", e.getMessage());
             request.getRequestDispatcher(JspHelper.getPath("newMatch")).include(request, response);

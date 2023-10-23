@@ -21,7 +21,9 @@
 </header>
 <main>
   <nav class="center">
-    <a href="http://localhost:8080/app/home">Home page</a>
+    <form action="#" method="post">
+      <button type="submit" class="button" name="home">Home page</button>
+    </form>
   </nav>
   <section>
 
